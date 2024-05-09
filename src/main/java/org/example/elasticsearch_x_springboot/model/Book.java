@@ -1,6 +1,6 @@
 package org.example.elasticsearch_x_springboot.model;
 
-import lombok.Data;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -16,7 +16,7 @@ public class Book {
 
     private String authorName;
 
-    private String issbn;
+    private String isbn;
 
     public String getId() {
         return id;
@@ -46,11 +46,11 @@ public class Book {
         this.authorName = authorName;
     }
 
-    public String getIssbn() {
-        return issbn;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setIssbn(String isbn) {
-        this.issbn = isbn;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }

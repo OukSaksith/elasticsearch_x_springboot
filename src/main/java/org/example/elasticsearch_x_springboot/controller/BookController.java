@@ -4,12 +4,12 @@ package org.example.elasticsearch_x_springboot.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
 import org.example.elasticsearch_x_springboot.metadata.PublicationYear;
 import org.example.elasticsearch_x_springboot.model.Book;
 import org.example.elasticsearch_x_springboot.service.BookService;
 import org.example.elasticsearch_x_springboot.service.exception.BookNotFoundException;
 import org.example.elasticsearch_x_springboot.service.exception.DuplicateIsbnException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +20,8 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
+
+    @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
@@ -112,7 +114,7 @@ public class BookController {
         book.setTitle(bookDto.getTitle());
         book.setPublicationYear(bookDto.getPublicationYear());
         book.setAuthorName(bookDto.getAuthorName());
-        book.setIssbn(bookDto.getIssbn());
+        book.setIsbn(bookDto.getIssbn());
         return book;
     }
     }

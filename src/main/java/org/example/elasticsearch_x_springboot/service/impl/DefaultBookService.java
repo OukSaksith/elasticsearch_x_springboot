@@ -6,9 +6,11 @@ import org.example.elasticsearch_x_springboot.repository.BookRepository;
 import org.example.elasticsearch_x_springboot.service.BookService;
 import org.example.elasticsearch_x_springboot.service.exception.BookNotFoundException;
 import org.example.elasticsearch_x_springboot.service.exception.DuplicateIsbnException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +21,12 @@ import static co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders.ma
 
 @Service
 public class DefaultBookService implements BookService {
+
     private final BookRepository bookRepository;
 
     private final ElasticsearchTemplate elasticsearchTemplate;
-
-    public DefaultBookService(BookRepository bookRepository, ElasticsearchTemplate elasticsearchTemplate) {
+    @Autowired
+    public DefaultBookService(BookRepository bookRepository, ElasticsearchTemplate elasticsearchTemplate){
         this.bookRepository = bookRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
@@ -46,7 +49,6 @@ public class DefaultBookService implements BookService {
         return bookRepository.findByAuthorName(authorName);
     }
 
-
     @Override
     public List<Book> findByTitleAndAuthor(String title, String author) {
         var criteria = QueryBuilders.bool(builder -> builder.must(
@@ -60,10 +62,10 @@ public class DefaultBookService implements BookService {
 
     @Override
     public Book create(Book book) throws DuplicateIsbnException {
-        if (getByIsbn(book.getIssbn()).isEmpty()) {
+        if (getByIsbn(book.getIsbn()).isEmpty()) {
             return bookRepository.save(book);
         }
-        throw new DuplicateIsbnException(String.format("The provided ISBN: %s already exists. Use update instead!", book.getIssbn()));
+        throw new DuplicateIsbnException(String.format("The provided ISBN: %s already exists. Use update instead!", book.getIsbn()));
     }
 
     @Override
@@ -75,7 +77,7 @@ public class DefaultBookService implements BookService {
     public Book update(String id, Book book) throws BookNotFoundException {
         Book oldBook = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("There is not book associated with the given id"));
-        oldBook.setIssbn(book.getIssbn());
+        oldBook.setIsbn(book.getIsbn());
         oldBook.setAuthorName(book.getAuthorName());
         oldBook.setPublicationYear(book.getPublicationYear());
         oldBook.setTitle(book.getTitle());
